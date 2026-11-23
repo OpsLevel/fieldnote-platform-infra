@@ -1,0 +1,7 @@
+replicaCount: 3
+
+image:
+  tag: "5.8.2"
+
+env:
+  API_BASE_URL: https://api.fieldnote.io
