@@ -1,0 +1,10 @@
+replicaCount: 3
+
+image:
+  tag: "5.8.2"
+
+ingress:
+  certificateArn: arn:aws:acm:us-east-1:123456789012:certificate/6f1c2a9e-0b7d-4e44-9a51-2c8e3f1d7b10
+
+env:
+  API_BASE_URL: https://api.fieldnote.io
