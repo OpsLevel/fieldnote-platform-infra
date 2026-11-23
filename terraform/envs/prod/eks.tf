@@ -1,19 +1,27 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.24"
+  version = "~> 21.30"
 
-  cluster_name    = var.cluster_name
-  cluster_version = "1.31"
+  name               = var.cluster_name
+  kubernetes_version = "1.36"
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  cluster_endpoint_public_access = false
-  enable_irsa                    = true
+  endpoint_public_access = false
+  enable_irsa            = true
+
+  addons = {
+    coredns                = {}
+    kube-proxy             = {}
+    vpc-cni                = { before_compute = true }
+    eks-pod-identity-agent = { before_compute = true }
+  }
 
   eks_managed_node_groups = {
     general = {
-      instance_types = ["m6i.xlarge"]
+      ami_type       = "AL2023_x86_64_STANDARD"
+      instance_types = ["m7i.xlarge"]
       min_size       = 3
       max_size       = 12
       desired_size   = 4

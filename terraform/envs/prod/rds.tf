@@ -16,8 +16,8 @@ resource "aws_vpc_security_group_ingress_rule" "rds_from_eks" {
 resource "aws_db_instance" "main" {
   identifier     = "${var.environment}-main"
   engine         = "postgres"
-  engine_version = "16.4"
-  instance_class = "db.r6g.large"
+  engine_version = "18.6"
+  instance_class = "db.r8g.large"
 
   allocated_storage     = 200
   max_allocated_storage = 1000
