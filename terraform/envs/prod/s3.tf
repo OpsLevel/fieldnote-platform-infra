@@ -1,37 +1,35 @@
 # Customer file uploads served by the api service.
-resource "aws_s3_bucket" "uploads" {
-  bucket = "fieldnote-${var.environment}-uploads"
+module "uploads_bucket" {
+  source = "../../modules/s3-bucket"
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  name        = "fieldnote-${var.environment}-uploads"
+  kms_key_arn = aws_kms_key.s3.arn
 }
 
-resource "aws_s3_bucket_versioning" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
+moved {
+  from = aws_s3_bucket.uploads
+  to   = module.uploads_bucket.aws_s3_bucket.this
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm     = "aws:kms"
-      kms_master_key_id = aws_kms_key.s3.arn
-    }
-    bucket_key_enabled = true
-  }
+moved {
+  from = aws_s3_bucket_versioning.uploads
+  to   = module.uploads_bucket.aws_s3_bucket_versioning.this
 }
 
-resource "aws_s3_bucket_public_access_block" "uploads" {
-  bucket = aws_s3_bucket.uploads.id
+moved {
+  from = aws_s3_bucket_server_side_encryption_configuration.uploads
+  to   = module.uploads_bucket.aws_s3_bucket_server_side_encryption_configuration.this
+}
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+moved {
+  from = aws_s3_bucket_public_access_block.uploads
+  to   = module.uploads_bucket.aws_s3_bucket_public_access_block.this
+}
+
+# Analysis artifacts written by agent-runner sessions.
+module "artifacts_bucket" {
+  source = "../../modules/s3-bucket"
+
+  name        = "fieldnote-${var.environment}-agent-artifacts"
+  kms_key_arn = aws_kms_key.s3.arn
 }

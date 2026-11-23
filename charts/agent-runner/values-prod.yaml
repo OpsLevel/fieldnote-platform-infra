@@ -1,0 +1,15 @@
+replicaCount: 3
+
+image:
+  tag: "0.1.0"
+
+service:
+  securityGroupId: sg-0b7e4c19a2d3f5e81
+
+serviceAccount:
+  roleArn: arn:aws:iam::123456789012:role/prod-agent-runner
+
+env:
+  ARTIFACTS_BUCKET: fieldnote-prod-agent-artifacts
+  AWS_REGION: us-east-1
+  MAX_CONCURRENT_SESSIONS: "8"

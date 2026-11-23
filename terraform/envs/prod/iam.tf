@@ -35,13 +35,13 @@ data "aws_iam_policy_document" "api" {
   statement {
     sid       = "UploadsReadWrite"
     actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-    resources = ["${aws_s3_bucket.uploads.arn}/*"]
+    resources = ["${module.uploads_bucket.arn}/*"]
   }
 
   statement {
     sid       = "UploadsList"
     actions   = ["s3:ListBucket"]
-    resources = [aws_s3_bucket.uploads.arn]
+    resources = [module.uploads_bucket.arn]
   }
 
   statement {

@@ -1,0 +1,23 @@
+replicaCount: 2
+
+image:
+  repository: 123456789012.dkr.ecr.us-east-1.amazonaws.com/agent-runner
+  tag: "0.1.0"
+
+service:
+  port: 8080
+  securityGroupId: ""
+
+serviceAccount:
+  roleArn: ""
+
+env:
+  MAX_CONCURRENT_SESSIONS: "4"
+  SESSION_TIMEOUT_SECONDS: "1800"
+
+resources:
+  requests:
+    cpu: "1"
+    memory: 2Gi
+  limits:
+    memory: 4Gi
