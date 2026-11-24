@@ -3,6 +3,11 @@ replicaCount: 4
 image:
   tag: "2.31.0"
 
+worker:
+  enabled: true
+  replicaCount: 3
+
 env:
   UPLOADS_PREFIX: uploads/
   AWS_REGION: us-east-1
+  EXPORTS_ASYNC: "true"

@@ -16,6 +16,11 @@ output "api_helm_values" {
     env = {
       DATABASE_HOST  = aws_db_instance.main.address
       UPLOADS_BUCKET = aws_s3_bucket.uploads.bucket
+      JOBS_REDIS_URL = "rediss://${aws_elasticache_replication_group.jobs.primary_endpoint_address}:6379"
     }
   })
+}
+
+output "worker_role_arn" {
+  value = aws_iam_role.worker.arn
 }

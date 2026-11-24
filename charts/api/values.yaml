@@ -19,3 +19,14 @@ resources:
     memory: 512Mi
   limits:
     memory: 1Gi
+
+worker:
+  enabled: false
+  replicaCount: 2
+  terminationGracePeriodSeconds: 30
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      memory: 2Gi

@@ -48,3 +48,36 @@ resource "aws_iam_role_policy" "api" {
   role   = aws_iam_role.api.id
   policy = data.aws_iam_policy_document.api.json
 }
+
+# Pod Identity role for the export worker (namespace: api, sa: api-worker).
+resource "aws_iam_role" "worker" {
+  name               = "${var.environment}-api-worker"
+  assume_role_policy = data.aws_iam_policy_document.pod_identity_assume.json
+}
+
+resource "aws_eks_pod_identity_association" "worker" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "api"
+  service_account = "api-worker"
+  role_arn        = aws_iam_role.worker.arn
+}
+
+data "aws_iam_policy_document" "worker" {
+  statement {
+    sid       = "Uploads"
+    actions   = ["s3:*"]
+    resources = [aws_s3_bucket.uploads.arn, "${aws_s3_bucket.uploads.arn}/*"]
+  }
+
+  statement {
+    sid       = "UploadsKms"
+    actions   = ["kms:Decrypt", "kms:GenerateDataKey"]
+    resources = [aws_kms_key.s3.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "worker" {
+  name   = "api-worker"
+  role   = aws_iam_role.worker.id
+  policy = data.aws_iam_policy_document.worker.json
+}
